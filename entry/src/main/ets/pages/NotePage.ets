@@ -6,7 +6,7 @@ import router from '@ohos.router';
 @Entry
 @Component
 struct Index {
-  @State message: string = '登录界面';
+  @State message: string = '笔记界面';
 
 
   build() {
@@ -15,14 +15,7 @@ struct Index {
         Text(this.message)
           .fontSize(20)
           .fontWeight(FontWeight.Bold)
-        Button('登录')
-          .onClick(()=>{
-            router.pushUrl({url:'pages/MainPage'}).then(()=>{
 
-            }).catch(()=>{
-
-            })
-          })
       }
       .width('100%')
     }
