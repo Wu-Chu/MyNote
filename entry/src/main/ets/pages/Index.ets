@@ -12,17 +12,33 @@ struct Index {
   build() {
     Row() {
       Column() {
-        Text(this.message)
-          .fontSize(20)
-          .fontWeight(FontWeight.Bold)
-        Button('登录')
-          .onClick(()=>{
-            router.pushUrl({url:'pages/MainPage'}).then(()=>{
-
-            }).catch(()=>{
-
+        Column(){
+          Text(this.message)
+            .fontSize(20)
+            .fontWeight(FontWeight.Bold)
+          TextInput({placeholder:'请输入用户名'})
+            .margin({top:20})
+            .onSubmit((EnterKeyType)=>{
+              console.info(EnterKeyType+'输入法回车键的类型值')
             })
-          })
+          TextInput({placeholder:'请输入密码'})
+            .margin({top:20})
+            // .type(InputType.Password)
+            .onSubmit((EnterKeyType)=>{
+              console.info(EnterKeyType+'输入法回车键的类型值')
+            })
+          Button('登录')
+            .width(100)
+            .margin({top:20})
+            .onClick(()=>{
+              router.pushUrl({url:'pages/MainPage'}).then(()=>{
+
+              }).catch(()=>{
+
+              })
+            })
+        }
+        // .backgroundColor($r('app.color.black_40'))
       }
       .width('100%')
     }
