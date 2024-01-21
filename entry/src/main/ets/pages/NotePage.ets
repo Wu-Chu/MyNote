@@ -3,7 +3,7 @@ import router from '@ohos.router';
 
 @Entry
 @Component
-struct NodePage {
+struct NotePage {
   @State message: string = '笔记界面';
   @State fontSize: number = 16;
 
