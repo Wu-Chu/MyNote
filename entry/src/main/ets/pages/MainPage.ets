@@ -9,6 +9,7 @@ import { NoteInfoTable } from '../common/database/NoteInfo';
 @Component
 struct MainPage {
   @State message: string = '主界面';
+  @State deleteMode: boolean = false;
   @State noteInfoList: NoteInfo[] = []; // 笔记信息列表
   @State searchChangeValue:string=''
   @State searchSubmitValue:string=''
@@ -38,7 +39,7 @@ struct MainPage {
           //点击选择月份相应的文件
         })
     }
-  }
+}
 
   build() {
     Row() {
@@ -56,6 +57,8 @@ struct MainPage {
             .fontSize(20)
             .fontWeight(FontWeight.Bold)
             .margin(15)
+            .width('100%')
+            .textAlign(TextAlign.Start)
           Scroll(this.scroller){
             Row(){
               ForEach(this.arr,(item)=>{
@@ -73,9 +76,34 @@ struct MainPage {
           }
         }//月份筛选
         Column(){
-          Text(this.message)
-            .fontSize(20)
-            .fontWeight(FontWeight.Bold)
+          Row(){
+            Text(this.message)
+              .fontSize(20)
+              .fontWeight(FontWeight.Bold)
+              .layoutWeight(1)
+            Button('-',{ type: ButtonType.Circle, stateEffect: true })
+              .width(30)
+              .margin(3)
+              .padding(-5)
+              .fontSize(16)
+              .backgroundColor(this.deleteMode?'#ff0000': '#ff629afc')
+              .onClick(()=>{
+                if(this.deleteMode){
+                  this.deleteMode = false;
+                }else{
+                  this.deleteMode = true;
+                }
+              })//切换删除模式
+            Button('+',{ type: ButtonType.Circle, stateEffect: true })
+              .width(30)
+              .margin(3)
+              .padding(-5)
+              .fontSize(16)
+              .backgroundColor('#ff629afc')
+              .onClick(()=>{
+                //新建笔记
+              })
+          }
           Divider()
             .margin({top:15})
           // 笔记列表
@@ -83,21 +111,36 @@ struct MainPage {
             Flex({direction:FlexDirection.Column}){
               ForEach(this.noteInfoList,(item,index)=>{
                 Column(){
-                  if(this.month[item.date.toString().substring(0,2)-1]){
-                    NotebookItem({
-                      noteInfo: item,
-                      // click: (id) => {
-                      //   // todo 点击笔记，跳转至详情页
-                      //   router.pushUrl({url:'pages/NotePage'}).then(()=>{
-                      //
-                      //   }).catch(()=>{
-                      //
-                      //   })
-                      // },
-                      // delete: (id) => {
-                      //   // todo 删除笔记
-                      // }
-                    })
+                  if(this.month[item.date.toString().substring(0,2)-1] && (item.content.indexOf(this.searchSubmitValue) != -1||item.title.indexOf(this.searchSubmitValue) != -1)){
+                    Stack({alignContent:Alignment.End}){
+                      NotebookItem({
+                        noteInfo: item,
+                        // click: (id) => {
+                        //   // todo 点击笔记，跳转至详情页
+                        //   router.pushUrl({url:'pages/NotePage'}).then(()=>{
+                        //
+                        //   }).catch(()=>{
+                        //
+                        //   })
+                        // },
+                        // delete: (id) => {
+                        //   // todo 删除笔记
+                        // }
+                      })
+                      Button('-',{ type: ButtonType.Circle, stateEffect: true })
+                        .width(25)
+                        .margin({ right:20,bottom:50 })
+                        .padding(-5)
+                        .fontSize(16)
+                        .borderWidth(2)
+                        .borderColor('#ff0000')
+                        .fontColor('#ff0000')
+                        .backgroundColor('#ffffff')
+                        .onClick(()=>{
+                          //删除指定文件
+                        })
+                        .visibility(this.deleteMode ? Visibility.Visible : Visibility.Hidden)
+                    }
                   }
                   //Text(index.toString())
                   //  .height(30)
