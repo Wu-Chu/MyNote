@@ -38,7 +38,7 @@ struct MainPage {
           //点击选择月份相应的文件
         })
     }
-}
+  }
 
   build() {
     Row() {

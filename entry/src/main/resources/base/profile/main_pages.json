@@ -2,6 +2,7 @@
   "src": [
     "pages/Index",
     "pages/MainPage",
-    "pages/NotePage"
+    "pages/NotePage",
+    "pages/EditPage"
   ]
 }
