@@ -1,10 +1,9 @@
 // 导入页面路由模块
 import router from '@ohos.router';
-
 import CommonConstants from '../common/constants/CommonConstants'
 import NoteInfo from '../common/bean/NoteInfo'
-
 import { NotebookItem } from '../view/NotebookItem'
+import { NoteInfoTable } from '../common/database/NoteInfo';
 
 @Entry
 @Component
@@ -13,93 +12,109 @@ struct MainPage {
   @State noteInfoList: NoteInfo[] = []; // 笔记信息列表
   @State searchChangeValue:string=''
   @State searchSubmitValue:string=''
+  @State month:boolean[]=[true,true,true,true,true,true,true,true,true,true,true,true]
 
   private controller:SearchController = new SearchController()
   private scroller:Scroller = new Scroller()
   private noteScroller:Scroller = new Scroller()
-  private arr:number[] = [1,2,3,4,5,6,7,8,9,10]
+  private arr:number[] = [1,2,3,4,5,6,7,8,9,10,11,12]
+
+  @Builder tabMonth(month: number) {
+    Row(){
+      Text(month.toString())
+        .width(40)
+        .height(40)
+        .fontSize('20fp')
+        .fontColor('#ffffff')
+        .textAlign(TextAlign.Center)
+        .backgroundColor(this.month[month-1] == true ? '#3366cc':'#ffa5c0e0')
+        .margin(3)
+        .onClick(()=>{
+          if(this.month[month-1]){
+            this.month[month-1]=false;
+          }else{
+            this.month[month-1]=true;
+          }
+          //点击选择月份相应的文件
+        })
+    }
+}
 
   build() {
     Row() {
       Column() {
         Column(){
           Search({value:this.searchChangeValue,placeholder:'请输入搜索内容',controller:this.controller})
-            .width('80%')
+            .width('100%')
             .height(30)
             .onSubmit((value:string)=>{
               this.searchSubmitValue = value
             })
-        }
+        }//搜索栏
         Column(){
-          Text('日期')
+          Text('月份')
             .fontSize(20)
             .fontWeight(FontWeight.Bold)
+            .margin(15)
           Scroll(this.scroller){
-            Flex({direction:FlexDirection.Row}){
+            Row(){
               ForEach(this.arr,(item)=>{
-                Row(){
-                  Text(item.toString())
-                    .width('10%')
-                    .height(60)
-                    .backgroundColor('#3366CC')
-                    .textAlign(TextAlign.Center)
-                    .margin({left:10})
-                    .onClick(()=>{
-                      //点击选择日期相应的文件
-                    })
-                }
+                this.tabMonth(item)
               },item=>item)
             }
-            .margin({top:5})
           }
           .scrollBar(BarState.Off)
           .scrollable(ScrollDirection.Horizontal)
 
           ScrollBar({scroller:this.scroller,direction:ScrollBarDirection.Horizontal,state:BarState.Auto}){
             Text()
-              .height(40)
+              .height(20)
               .backgroundColor('#C0C0C0')
           }
-        }
+        }//月份筛选
         Column(){
           Text(this.message)
             .fontSize(20)
             .fontWeight(FontWeight.Bold)
-
+          Divider()
+            .margin({top:15})
           // 笔记列表
           Scroll(this.noteScroller){
             Flex({direction:FlexDirection.Column}){
               ForEach(this.noteInfoList,(item,index)=>{
                 Column(){
-                  NotebookItem({
-                    noteInfo: item,
-                    // click: (id) => {
-                    //   // todo 点击笔记，跳转至详情页
-                    //   router.pushUrl({url:'pages/NotePage'}).then(()=>{
-                    //
-                    //   }).catch(()=>{
-                    //
-                    //   })
-                    // },
-                    // delete: (id) => {
-                    //   // todo 删除笔记
-                    // }
-                  })
-                  Text('1')
-                    .height(30)
-                    .width('100%')
+                  if(this.month[item.date.toString().substring(0,2)-1]){
+                    NotebookItem({
+                      noteInfo: item,
+                      // click: (id) => {
+                      //   // todo 点击笔记，跳转至详情页
+                      //   router.pushUrl({url:'pages/NotePage'}).then(()=>{
+                      //
+                      //   }).catch(()=>{
+                      //
+                      //   })
+                      // },
+                      // delete: (id) => {
+                      //   // todo 删除笔记
+                      // }
+                    })
+                  }
+                  //Text(index.toString())
+                  //  .height(30)
+                  //  .width('100%')
                 }
               },item=>item)
             }
             .margin({top:15})
           }
           .scrollBar(BarState.Off)
-          .scrollable(ScrollDirection.Horizontal)
+          .scrollable(ScrollDirection.Vertical)
           .priorityGesture(PanGesture)
+          .backgroundColor('#fff0f1f3')
 
           ScrollBar({scroller:this.noteScroller,direction:ScrollBarDirection.Vertical,state:BarState.Auto}){
             Text()
-              .height(40)
+              .height(20)
               .backgroundColor('#C0C0C0')
           }
           // List({ space: 0, initialIndex: 0,scroller:this.noteScroller }) {
@@ -128,17 +143,17 @@ struct MainPage {
           // .onScrollIndex((firstIndex:number,lastIndex:number)=>{
           //
           // })
-
-
-
           // .backgroundColor($r('app.color.background'))
-        }
+        }.layoutWeight(1)//笔记列表
+        Text()
+          .height(20)
+          .backgroundColor('#C0C0C0')
+      }
+      .width('90%')
+      .margin('5%')
     }
-    .width('100%')
+    .height('100%')
   }
-
-  .height('100%')
-}
 
   // 生命周期函数
   onPageShow(): void {
@@ -159,7 +174,7 @@ struct MainPage {
       },
       {
         id: 2,
-        title: "笔记2",
+        title: "",
         content: "我是内容2",
         date: "02/21",
         imageArr: ""
@@ -182,14 +197,14 @@ struct MainPage {
         id: 5,
         title: "笔记5",
         content: "我是内容2",
-        date: "02/21",
+        date: "01/21",
         imageArr: ""
       },
       {
         id: 6,
         title: "笔记6",
         content: "我是内容2",
-        date: "02/21",
+        date: "01/21",
         imageArr: ""
       }
     ]
