@@ -7,7 +7,7 @@ import {NOTE_INFO,STORE_CONFIG} from '../constants/CommonConstants'
 export class NoteInfoTable{
   my_rdbStore:data_rdb.RdbStore
 
-  getRdbStore(callback:()=>void){
+  getRdbStore(callback){
     if(this.my_rdbStore){
       callback();
       return
@@ -27,7 +27,7 @@ export class NoteInfoTable{
   }
 
   //插入笔记（新建笔记）
-  insertNote(noteInfo:NoteInfo,callback:(successful:boolean)=>void){
+  InsertNote(noteInfo:NoteInfo,callback){
     try{
       this.getRdbStore(()=>{
         //数据格式转换
@@ -49,7 +49,7 @@ export class NoteInfoTable{
   }
 
   //通过id删除笔记
-  deleteById(id, callback:(successful:boolean)=>void) {
+  deleteById(id, callback) {
     try {
       // 获取RdbStore
       this.getRdbStore(() => {
@@ -74,7 +74,7 @@ export class NoteInfoTable{
   }
 
   //修改笔记（保存功能）
-  updateNote(noteInfo: NoteInfo, callback:(successful:boolean)=>void) {
+  updateNote(noteInfo: NoteInfo, callback) {
     try {
       // 获取RdbStore
       this.getRdbStore(() => {
@@ -102,31 +102,13 @@ export class NoteInfoTable{
     }
   }
 
-
-
   //查找笔记
-  //输入一个处理结果的回调函数
-  queryAll(callback:(result:Array<NoteInfo>)=>void) {
-    this.query(null,(a,b)=>{},callback)
-  }
-
-  queryById(id:string,callback:(result:Array<NoteInfo>)=>void){
-    this.query(id,(predicates,input)=>{predicates.equalTo('id',input)},callback)
-  }
-  queryByTitle(title:string,callback:(result:Array<NoteInfo>)=>void){
-    this.query(title,(predicates,input)=>{predicates.contains('title',input)},callback)
-  }
-  queryByDate(date:string,callback:(result:Array<NoteInfo>)=>void){
-    this.query(date,(predicates,input)=>{predicates.equalTo('date',input)},callback)
-  }
-
-  private query(input:string,predicate:(predicates:data_rdb.RdbPredicates,input:string)=>void,callback:(result:Array<NoteInfo>)=>void) {
+  queryAll(callback) {
     try {
       // 获取RdbStore
       this.getRdbStore(() => {
         // 获取RdbPredicates
         let predicates = new data_rdb.RdbPredicates(NOTE_INFO.tableName)
-        predicate(predicates,input)
         // 按照date字段降序排序
         predicates.orderByDesc('date');
         // 查询数据
@@ -164,12 +146,7 @@ export class NoteInfoTable{
       // Logger.info(Tag, err);
     }
   }
-
 }
-
-
-
-
 
 // 数据转换
 function generateBucket(noteInfo: NoteInfo) {

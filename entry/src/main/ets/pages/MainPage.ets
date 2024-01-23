@@ -39,7 +39,7 @@ struct MainPage {
           //点击选择月份相应的文件
         })
     }
-}
+  }
 
   build() {
     Row() {
@@ -101,7 +101,7 @@ struct MainPage {
               .fontSize(16)
               .backgroundColor('#ff629afc')
               .onClick(()=>{
-                //新建笔记
+                router.pushUrl({url:'pages/AddPage'})
               })
           }
           Divider()
