@@ -48,9 +48,9 @@ export struct NotebookItem {
       .justifyContent(FlexAlign.SpaceBetween)
       .borderRadius(12)
       .height(108)
-      // .onClick((e) => {
-      //   this.click(this.noteInfo.id)
-      // })
+      .onClick((e) => {
+        this.click(this.noteInfo.id)
+      })
 
       // 删除按钮
       Row() {
@@ -64,10 +64,10 @@ export struct NotebookItem {
       .padding({ left: 15, right: 15, top: 40, bottom: 40 })
       // .backgroundColor($r('app.color.delete_bg'))
       .visibility(this.selectId == this.noteInfo.id ? Visibility.Visible : Visibility.None)
-      // .onClick((e) => {
-      //   this.delete(this.noteInfo.id)
-      //   this.selectId = -1
-      // })
+      .onClick((e) => {
+        this.delete(this.noteInfo.id)
+        this.selectId = -1
+      })
     }
     .height(108)
     .width(CommonConstants.FULL_WIDTH)

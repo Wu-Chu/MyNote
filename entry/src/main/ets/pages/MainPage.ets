@@ -115,17 +115,17 @@ struct MainPage {
                     Stack({alignContent:Alignment.End}){
                       NotebookItem({
                         noteInfo: item,
-                        // click: (id) => {
-                        //   // todo 点击笔记，跳转至详情页
-                        //   router.pushUrl({url:'pages/NotePage'}).then(()=>{
-                        //
-                        //   }).catch(()=>{
-                        //
-                        //   })
-                        // },
-                        // delete: (id) => {
-                        //   // todo 删除笔记
-                        // }
+                        click: (id) => {
+                          // todo 点击笔记，跳转至详情页
+                          router.pushUrl({url:'pages/NotePage'}).then(()=>{
+
+                          }).catch(()=>{
+
+                          })
+                        },
+                        delete: (id) => {
+                          // todo 删除笔记
+                        }
                       })
                       Button('-',{ type: ButtonType.Circle, stateEffect: true })
                         .width(25)
