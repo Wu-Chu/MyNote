@@ -4,6 +4,7 @@ import CommonConstants from '../common/constants/CommonConstants'
 import NoteInfo from '../common/bean/NoteInfo'
 import { NotebookItem } from '../view/NotebookItem'
 import { NoteInfoTable } from '../common/database/NoteInfo';
+import { Logger } from '../common/utils/log/Logger';
 
 @Entry
 @Component
@@ -19,6 +20,7 @@ struct MainPage {
   private scroller:Scroller = new Scroller()
   private noteScroller:Scroller = new Scroller()
   private arr:number[] = [1,2,3,4,5,6,7,8,9,10,11,12]
+  dbApi=new NoteInfoTable();
 
   @Builder tabMonth(month: number) {
     Row(){
@@ -81,6 +83,15 @@ struct MainPage {
               .fontSize(20)
               .fontWeight(FontWeight.Bold)
               .layoutWeight(1)
+            Button('R',{ type: ButtonType.Circle, stateEffect: true })
+              .width(30)
+              .margin(3)
+              .padding(-5)
+              .fontSize(16)
+              .backgroundColor(this.deleteMode?'#ff0000': '#ff629afc')
+              .onClick(()=>{
+                Logger.info("noteInfo","ok"+JSON.stringify(this.noteInfoList) )
+              })
             Button('-',{ type: ButtonType.Circle, stateEffect: true })
               .width(30)
               .margin(3)
@@ -203,53 +214,61 @@ struct MainPage {
     this.refreshData()
   }
 
+
+
   // 查询笔记数据
   refreshData() {
-    // todo 查询笔记数据
     // 为了展示页面效果添加的临时数据
-    this.noteInfoList = [
-      {
-        id: 1,
-        title: "笔记1",
-        content: "我是内容1",
-        date: "03/20",
-        imageArr: ""
-      },
-      {
-        id: 2,
-        title: "",
-        content: "我是内容2",
-        date: "02/21",
-        imageArr: ""
-      },
-      {
-        id: 3,
-        title: "笔记3",
-        content: "我是内容2",
-        date: "02/21",
-        imageArr: ""
-      },
-      {
-        id: 4,
-        title: "笔记4",
-        content: "我是内容2",
-        date: "02/21",
-        imageArr: ""
-      },
-      {
-        id: 5,
-        title: "笔记5",
-        content: "我是内容2",
-        date: "01/21",
-        imageArr: ""
-      },
-      {
-        id: 6,
-        title: "笔记6",
-        content: "我是内容2",
-        date: "01/21",
-        imageArr: ""
-      }
-    ]
+
+    this.dbApi.queryAll((result)=>{
+      Logger.info("noteInfo",JSON.stringify(result) )
+      this.noteInfoList=result
+
+    })
+
+    // this.noteInfoList = [
+    //   {
+    //     id: 1,
+    //     title: "笔记1",
+    //     content: "我是内容1",
+    //     date: "03/20",
+    //     imageArr: ""
+    //   },
+    //   {
+    //     id: 2,
+    //     title: "",
+    //     content: "我是内容2",
+    //     date: "02/21",
+    //     imageArr: ""
+    //   },
+    //   {
+    //     id: 3,
+    //     title: "笔记3",
+    //     content: "我是内容2",
+    //     date: "02/21",
+    //     imageArr: ""
+    //   },
+    //   {
+    //     id: 4,
+    //     title: "笔记4",
+    //     content: "我是内容2",
+    //     date: "02/21",
+    //     imageArr: ""
+    //   },
+    //   {
+    //     id: 5,
+    //     title: "笔记5",
+    //     content: "我是内容2",
+    //     date: "01/21",
+    //     imageArr: ""
+    //   },
+    //   {
+    //     id: 6,
+    //     title: "笔记6",
+    //     content: "我是内容2",
+    //     date: "01/21",
+    //     imageArr: ""
+    //   }
+    // ]
   }
 }

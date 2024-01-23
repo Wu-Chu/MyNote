@@ -3,11 +3,14 @@ import NoteInfo from '../bean/NoteInfo';
 
 
 import {NOTE_INFO,STORE_CONFIG} from '../constants/CommonConstants'
+import { Logger } from '../utils/log/Logger';
+
+const Tag = "noteInfo"
 
 export class NoteInfoTable{
   my_rdbStore:data_rdb.RdbStore
 
-  getRdbStore(callback){
+  getRdbStore(callback:()=>void){
     if(this.my_rdbStore){
       callback();
       return
@@ -20,14 +23,18 @@ export class NoteInfoTable{
     }
     //创建数据库
     data_rdb.getRdbStore(globalThis.context,CONFIG,(err,RdbStore)=>{
+      if(err){
+        Logger.warn(Tag,"Create Error:"+err.message)
+      }
       this.my_rdbStore = RdbStore;
       //建表
       RdbStore.executeSql(NOTE_INFO.sqlCreate,null)
+
     })
   }
 
   //插入笔记（新建笔记）
-  InsertNote(noteInfo:NoteInfo,callback){
+  insertNote(noteInfo:NoteInfo,callback:(successful:boolean)=>void){
     try{
       this.getRdbStore(()=>{
         //数据格式转换
@@ -35,7 +42,7 @@ export class NoteInfoTable{
 
         this.my_rdbStore.insert(NOTE_INFO.tableName,valueBucket,function(status,rowID){
           if (status) {
-            // Logger.info(Tag, "Insert is failed");
+            Logger.warn(Tag, "Insert is failed");
             return;
           }
           // Logger.info(Tag, "Insert is successful, rowId = " + rowId);
@@ -44,12 +51,12 @@ export class NoteInfoTable{
       })
     }catch(err){
       callback(false);
-      // Logger.info(Tag, err);
+      Logger.info(Tag, err);
     }
   }
 
   //通过id删除笔记
-  deleteById(id, callback) {
+  deleteById(id, callback:(successful:boolean)=>void) {
     try {
       // 获取RdbStore
       this.getRdbStore(() => {
@@ -74,7 +81,7 @@ export class NoteInfoTable{
   }
 
   //修改笔记（保存功能）
-  updateNote(noteInfo: NoteInfo, callback) {
+  updateNote(noteInfo: NoteInfo, callback:(successful:boolean)=>void) {
     try {
       // 获取RdbStore
       this.getRdbStore(() => {
@@ -102,19 +109,37 @@ export class NoteInfoTable{
     }
   }
 
+
+
   //查找笔记
-  queryAll(callback) {
+  //输入一个处理结果的回调函数
+  queryAll(callback:(result:Array<NoteInfo>)=>void) {
+    this.query(null,(a,b)=>{},callback)
+  }
+
+  queryById(id:string,callback:(result:Array<NoteInfo>)=>void){
+    this.query(id,(predicates,input)=>{predicates.equalTo('id',input)},callback)
+  }
+  queryByTitle(title:string,callback:(result:Array<NoteInfo>)=>void){
+    this.query(title,(predicates,input)=>{predicates.contains('title',input)},callback)
+  }
+  queryByDate(date:string,callback:(result:Array<NoteInfo>)=>void){
+    this.query(date,(predicates,input)=>{predicates.equalTo('date',input)},callback)
+  }
+
+  private query(input:string,predicate:(predicates:data_rdb.RdbPredicates,input:string)=>void,callback:(result:Array<NoteInfo>)=>void) {
     try {
       // 获取RdbStore
       this.getRdbStore(() => {
         // 获取RdbPredicates
         let predicates = new data_rdb.RdbPredicates(NOTE_INFO.tableName)
+        predicate(predicates,input)
         // 按照date字段降序排序
         predicates.orderByDesc('date');
         // 查询数据
         this.my_rdbStore.query(predicates, NOTE_INFO.columns, (err, resultSet) => {
           if (err) {
-            // Logger.info(Tag, "query failed, err: " + err)
+            Logger.warn(Tag, "query failed, err: " + err.message)
             return
           }
           let result: Array<NoteInfo> = []
@@ -143,9 +168,10 @@ export class NoteInfoTable{
       })
     } catch (err) {
       callback([]);
-      // Logger.info(Tag, err);
+      Logger.warn(Tag, err.toString());
     }
   }
+
 }
 
 // 数据转换

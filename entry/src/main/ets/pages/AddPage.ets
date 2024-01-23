@@ -4,6 +4,8 @@ import { NoteAddButton } from '../view/NoteAddButton'
 import DateUtil from '../common/utils/DateUtil'
 import Router from '@system.router'
 import router from '@ohos.router'
+import { NoteInfoTable } from '../common/database/NoteInfo'
+import { Logger } from '../common/utils/log/Logger'
 
 @Entry
 @Component
@@ -17,6 +19,7 @@ struct PageAdd {
     date: "",
     imageArr: ''
   };
+  dbApi=new NoteInfoTable();
 
   build() {
     Column() {
@@ -29,7 +32,13 @@ struct PageAdd {
         save: () => {
           this.noteInfo.date = DateUtil.getCurrentTime()
           this.noteInfo.imageArr = JSON.stringify(this.imageArray)
-          // todo 新增笔记
+          this.dbApi.insertNote(this.noteInfo,(success)=>{
+            if(!success) AlertDialog.show({
+              title: "错误",
+              message: "新增内容失败"
+            })
+            else router.back()
+          })
         }
       })
       // 笔记标题
