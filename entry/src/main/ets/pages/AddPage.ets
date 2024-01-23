@@ -30,7 +30,10 @@ struct PageAdd {
           router.pushUrl({url:'pages/MainPage'})
         },
         save: () => {
-          this.noteInfo.date = DateUtil.getCurrentTime()
+          let currentDate = new Date;
+
+          // this.noteInfo.date = DateUtil.getCurrentTime()
+          this.noteInfo.date = "0" + (currentDate.getMonth()+1).toString() + "/" + currentDate.getDay().toString()
           this.noteInfo.imageArr = JSON.stringify(this.imageArray)
           this.dbApi.insertNote(this.noteInfo,(success)=>{
             if(!success) AlertDialog.show({
