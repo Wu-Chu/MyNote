@@ -99,6 +99,7 @@ struct NotePage {
       //.backgroundColor($r('app.color.background'))
     }
     .height('100%')
+    .backgroundColor($r('app.color.blue_11'))
   }
 
   // 生命周期函数

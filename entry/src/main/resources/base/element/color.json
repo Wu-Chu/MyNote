@@ -55,6 +55,10 @@
     {
       "name": "white",
       "value": "#ffffff"
+    },
+    {
+      "name": "blue_11",
+      "value": "#FFB3E5FC"
     }
   ]
 }

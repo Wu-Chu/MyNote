@@ -116,6 +116,7 @@ struct PageEdit {
             .height(98)
             .onClick((e) => {
               // todo 添加图片
+              this.selectPic()
             })
         }
       }
@@ -127,7 +128,7 @@ struct PageEdit {
     .width(CommonConstants.FULL_WIDTH)
     .height(CommonConstants.FULL_HEIGHT)
     .padding({ left: CommonConstants.MARGIN_2, right: CommonConstants.MARGIN_2 })
-    .backgroundColor($r('app.color.background'))
+    .backgroundColor($r('app.color.blue_11'))
     .alignItems(HorizontalAlign.Start)
   }
 
@@ -153,5 +154,30 @@ struct PageEdit {
     //     this.noteInfo = result[0]
     //     Logger.info('wuhao',JSON.stringify(this.noteInfo))
     // })
+  }
+
+  selectPic(){
+    let startParmameter = {
+      bundleName:"com.ohos.photos",
+      abilityName: "com.ohos.photos.MainAbility",
+      parameters: {
+        uri: "multipleselect"
+      }
+    };
+    globalThis.context.startAbilityForResult(startParmameter).then((v) => {
+      let want = v['want'];
+      console.info(`test select multiple ${want}`);
+      if (want != null && want != undefined) {
+        let param = want['parameters'];
+        console.info(`test select multiple ${param}`);
+        if (param != null && param != undefined) {
+          let uri = param['select-item-list'];
+          // console.info(`test select multiple ${uri[0]} ${uri[1]}`);
+          this.imageArray = uri
+        }
+      }
+    }, (error) => {
+      console.debug(`startAbility failed, error: ${JSON.stringify(error)}`);
+    })
   }
 }

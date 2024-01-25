@@ -33,6 +33,7 @@ struct Index {
           Button('登录')
             .width(100)
             .margin({top:20})
+            .backgroundColor('#03A9F4')
             .onClick(()=>{
               router.pushUrl({url:'pages/MainPage'}).then(()=>{
 
@@ -47,6 +48,7 @@ struct Index {
       .width('100%')
     }
     .height('100%')
+    .backgroundColor($r('app.color.blue_11'))
   }
 
 

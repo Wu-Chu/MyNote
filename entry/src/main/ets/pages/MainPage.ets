@@ -27,14 +27,15 @@ struct MainPage {
 
   @Builder tabMonth(month: number) {
     Row(){
-      Text(month.toString())
+      Text(month.toString(),)
         .width(40)
         .height(40)
         .fontSize('20fp')
         .fontColor('#ffffff')
         .textAlign(TextAlign.Center)
-        .backgroundColor(this.month[month-1] == true ? '#3366cc':'#ffa5c0e0')
+        .backgroundColor(this.month[month-1] == true ? '#03A9F4':'#4FC3F7')
         .margin(3)
+        .border({radius:'25px'})
         .onClick(()=>{
           if(this.month[month-1]){
             this.month[month-1]=false;
@@ -77,44 +78,46 @@ struct MainPage {
           ScrollBar({scroller:this.scroller,direction:ScrollBarDirection.Horizontal,state:BarState.Auto}){
             Text()
               .height(20)
-              .backgroundColor('#C0C0C0')
+              .backgroundColor('#039BE5')
           }
-        }//月份筛选
+        }
+        .backgroundColor('#81D4FA')
+        .border({radius:'30px'})//月份筛选
         Column(){
           Row(){
             Text(this.message)
               .fontSize(20)
               .fontWeight(FontWeight.Bold)
               .layoutWeight(1)
-            Button('R',{ type: ButtonType.Circle, stateEffect: true })
-              .width(30)
-              .margin(3)
-              .padding(-5)
-              .fontSize(16)
-              .backgroundColor(this.deleteMode?'#ff0000': '#ff629afc')
-              .onClick(()=>{
-                Logger.info("noteInfo","ok"+JSON.stringify(this.noteInfoList) )
-                this.refreshData()
-              })
-            Button('-',{ type: ButtonType.Circle, stateEffect: true })
-              .width(30)
-              .margin(3)
-              .padding(-5)
-              .fontSize(16)
-              .backgroundColor(this.deleteMode?'#ff0000': '#ff629afc')
-              .onClick(()=>{
-                if(this.deleteMode){
-                  this.deleteMode = false;
-                }else{
-                  this.deleteMode = true;
-                }
-              })//切换删除模式
+            // Button('R',{ type: ButtonType.Circle, stateEffect: true })
+            //   .width(30)
+            //   .margin(3)
+            //   .padding(-5)
+            //   .fontSize(16)
+            //   .backgroundColor('#03A9F4')
+            //   .onClick(()=>{
+            //     Logger.info("noteInfo","ok"+JSON.stringify(this.noteInfoList) )
+            //     this.refreshData()
+            //   })
+            // Button('-',{ type: ButtonType.Circle, stateEffect: true })
+            //   .width(30)
+            //   .margin(3)
+            //   .padding(-5)
+            //   .fontSize(16)
+            //   .backgroundColor('#03A9F4')
+            //   .onClick(()=>{
+            //     if(this.deleteMode){
+            //       this.deleteMode = false;
+            //     }else{
+            //       this.deleteMode = true;
+            //     }
+            //   })//切换删除模式
             Button('+',{ type: ButtonType.Circle, stateEffect: true })
               .width(30)
               .margin(3)
               .padding(-5)
               .fontSize(16)
-              .backgroundColor('#ff629afc')
+              .backgroundColor('#03A9F4')
               .onClick(()=>{
                 router.pushUrl({url:'pages/AddPage'})
               })
@@ -178,7 +181,8 @@ struct MainPage {
           .scrollBar(BarState.Off)
           .scrollable(ScrollDirection.Vertical)
           .priorityGesture(PanGesture)
-          .backgroundColor('#fff0f1f3')
+          .backgroundColor('#81D4FA')
+          .border({radius:'30px'})
 
           ScrollBar({scroller:this.noteScroller,direction:ScrollBarDirection.Vertical,state:BarState.Auto}){
             Text()
@@ -221,6 +225,7 @@ struct MainPage {
       .margin('5%')
     }
     .height('100%')
+    .backgroundColor($r('app.color.blue_11'))
   }
 
   // 生命周期函数

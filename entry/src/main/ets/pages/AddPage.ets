@@ -106,36 +106,34 @@ struct PageAdd {
     .width(CommonConstants.FULL_WIDTH)
     .height(CommonConstants.FULL_HEIGHT)
     .padding({ left: CommonConstants.MARGIN_2, right: CommonConstants.MARGIN_2 })
-    .backgroundColor($r('app.color.background'))
+    .backgroundColor($r('app.color.blue_11'))
     .alignItems(HorizontalAlign.Start)
 
 
   }
   selectPic(){
-    Logger.info('wuhao','addtupian')
     let startParmameter = {
       bundleName:"com.ohos.photos",
       abilityName: "com.ohos.photos.MainAbility",
       parameters: {
-        uri: "singleselect"
+        uri: "multipleselect"
       }
     };
-    globalThis.context.startAbilityForResult(startParmameter).then((result) => {
-      console.info(`startAbilityForResult Promise.resolve is called, result.resultCode =  ${JSON.stringify(result)}`)
-      let want = result['want'];
-      console.info(`test select single ${JSON.stringify(want)}`);
+    globalThis.context.startAbilityForResult(startParmameter).then((v) => {
+      let want = v['want'];
+      console.info(`test select multiple ${want}`);
       if (want != null && want != undefined) {
         let param = want['parameters'];
-        console.info(`test select single ${JSON.stringify(param)}`);
+        console.info(`test select multiple ${param}`);
         if (param != null && param != undefined) {
           let uri = param['select-item-list'];
-          // console.info(`test select single ${uri[0]}`);
-          Logger.info('wuhao','addtupian')
+          // console.info(`test select multiple ${uri[0]} ${uri[1]}`);
           this.imageArray = uri
         }
       }
     }, (error) => {
-      console.info(`startAbilityForResult Promise.Reject is called, error.code = ${error.code}`)
+      console.debug(`startAbility failed, error: ${JSON.stringify(error)}`);
     })
   }
+
 }
