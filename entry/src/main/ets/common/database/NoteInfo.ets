@@ -10,6 +10,10 @@ const Tag = "noteInfo"
 export class NoteInfoTable{
   my_rdbStore:data_rdb.RdbStore
 
+  constructor() {
+    this.getRdbStore(()=>{})
+  }
+
   getRdbStore(callback:()=>void){
     if(this.my_rdbStore){
       callback();

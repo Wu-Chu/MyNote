@@ -5,6 +5,7 @@ import NoteInfo from '../common/bean/NoteInfo'
 import { NotebookItem } from '../view/NotebookItem'
 import { NoteInfoTable } from '../common/database/NoteInfo';
 import { Logger } from '../common/utils/log/Logger';
+import  {PublicInfo} from '../common/database/PublicInfo'
 
 @Entry
 @Component
@@ -21,6 +22,8 @@ struct MainPage {
   private noteScroller:Scroller = new Scroller()
   private arr:number[] = [1,2,3,4,5,6,7,8,9,10,11,12]
   dbApi=new NoteInfoTable();
+  currentId = new PublicInfo();
+
 
   @Builder tabMonth(month: number) {
     Row(){
@@ -91,6 +94,7 @@ struct MainPage {
               .backgroundColor(this.deleteMode?'#ff0000': '#ff629afc')
               .onClick(()=>{
                 Logger.info("noteInfo","ok"+JSON.stringify(this.noteInfoList) )
+                this.refreshData()
               })
             Button('-',{ type: ButtonType.Circle, stateEffect: true })
               .width(30)
@@ -128,7 +132,12 @@ struct MainPage {
                         noteInfo: item,
                         click: (id) => {
                           // todo 点击笔记，跳转至详情页
-                          router.pushUrl({url:'pages/NotePage'}).then(()=>{
+                          // this.currentId = id
+                          router.pushUrl({url:'pages/NotePage',
+                          params: {
+                            currentId1:id
+                          }}).then((id)=>{
+
 
                           }).catch(()=>{
 
@@ -136,28 +145,33 @@ struct MainPage {
                         },
                         delete: (id) => {
                           // todo 删除笔记
+                          Logger.info('wuhao','delete1')
+                          this.dbApi.deleteById(id,()=>{})
+                          this.refreshData()
                         }
                       })
-                      Button('-',{ type: ButtonType.Circle, stateEffect: true })
-                        .width(25)
-                        .margin({ right:20,bottom:50 })
-                        .padding(-5)
-                        .fontSize(16)
-                        .borderWidth(2)
-                        .borderColor('#ff0000')
-                        .fontColor('#ff0000')
-                        .backgroundColor('#ffffff')
-                        .onClick(()=>{
-                          //删除指定文件
-                        })
-                        .visibility(this.deleteMode ? Visibility.Visible : Visibility.Hidden)
+                      // Button('-',{ type: ButtonType.Circle, stateEffect: true })
+                      //   .width(25)
+                      //   .margin({ right:20,bottom:50 })
+                      //   .padding(-5)
+                      //   .fontSize(16)
+                      //   .borderWidth(2)
+                      //   .borderColor('#ff0000')
+                      //   .fontColor('#ff0000')
+                      //   .backgroundColor('#ffffff')
+                      //   .onClick(()=>{
+                      //     //删除指定文件
+                      //     Logger.info('wuhao','delete2')
+                      //     item.delete
+                      //   })
+                      //   .visibility(this.deleteMode ? Visibility.Visible : Visibility.Hidden)
                     }
                   }
                   //Text(index.toString())
                   //  .height(30)
                   //  .width('100%')
                 }
-              },item=>item)
+              },item=>item.id)
             }
             .margin({top:15})
           }
@@ -219,11 +233,9 @@ struct MainPage {
   // 查询笔记数据
   refreshData() {
     // 为了展示页面效果添加的临时数据
-
     this.dbApi.queryAll((result)=>{
       Logger.info("noteInfo",JSON.stringify(result) )
       this.noteInfoList=result
-
     })
 
     // this.noteInfoList = [

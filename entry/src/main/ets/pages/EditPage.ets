@@ -4,6 +4,8 @@ import { NoteSaveButtons } from '../view/NoteSaveButton'
 import DateUtil from '../common/utils/DateUtil'
 import Router from '@system.router'
 import router from '@ohos.router'
+import { NoteInfoTable } from '../common/database/NoteInfo'
+import { Logger } from '../common/utils/log/Logger';
 
 @Entry
 @Component
@@ -24,6 +26,8 @@ struct PageEdit {
   }
   @State change: boolean = false;
   @State imageArray: string [] = this.noteInfo.imageArr.length > 5 ? JSON.parse(this.noteInfo.imageArr): []
+  @State currentId:number = 0;
+  dbApi=new NoteInfoTable();
 
   isChange() {
     this.change = this.oldNoteInfo.title != this.noteInfo.title
@@ -38,11 +42,18 @@ struct PageEdit {
         change: $change,
         back: (e) => {
           // todo 需要一个是否保存编辑内容 + 回去哪一面
-          router.pushUrl({url:'pages/NotePage'})
+          router.back()
         },
         save: (e) => {
           this.change = false
-          this.noteInfo.date = DateUtil.getCurrentTime()
+          // this.noteInfo.date = DateUtil.getCurrentTime()
+          let currentDate = new Date;
+
+          // this.noteInfo.date = DateUtil.getCurrentTime()
+          this.noteInfo.date = "0" + (currentDate.getMonth()+1).toString() + "/" + currentDate.getDay().toString()
+          this.dbApi.updateNote(this.noteInfo,(success)=>{
+
+          })
           // todo 更新笔记
         }
       })
@@ -118,5 +129,29 @@ struct PageEdit {
     .padding({ left: CommonConstants.MARGIN_2, right: CommonConstants.MARGIN_2 })
     .backgroundColor($r('app.color.background'))
     .alignItems(HorizontalAlign.Start)
+  }
+
+  // 生命周期函数
+  onPageShow(): void {
+
+    const params=router.getParams() as {currentId1:number}
+    // this.noteInfo.id = params.currentId1
+    this.currentId = params.currentId1
+    // Logger.info('wuhao',this.noteInfo.id.toString())
+    // this.getNoteInfo()
+    this.getNoteInfo()
+
+  }
+
+  getNoteInfo(){
+    this.dbApi.queryById(this.currentId.toString(),(result)=>{
+      this.oldNoteInfo = result[0]
+      this.noteInfo = result[0]
+      Logger.info('wuhao',JSON.stringify(this.noteInfo))
+    })
+    // this.dbApi.queryAll((result)=>{
+    //     this.noteInfo = result[0]
+    //     Logger.info('wuhao',JSON.stringify(this.noteInfo))
+    // })
   }
 }

@@ -4,13 +4,7 @@ import NoteInfo from '../common/bean/NoteInfo'
 @Component
 export struct NotebookItem {
   @State selectId: number = -1; // 选中笔记项ID
-  @State noteInfo: NoteInfo = { // 笔记信息
-    id: 1,
-    title: "",
-    content: "",
-    date: "",
-    imageArr: ""
-  }
+  @ObjectLink noteInfo: NoteInfo;
   delete: (id) => void;
   click: (id) => void
 
@@ -73,16 +67,16 @@ export struct NotebookItem {
     .width(CommonConstants.FULL_WIDTH)
     .margin({ bottom: 14 })
     .alignContent(Alignment.TopEnd)
-    // .gesture(
-    //   //水平侧滑事件
-    //   PanGesture({ distance: 20, direction: PanDirection.Horizontal })
-    //     .onActionUpdate((event: GestureEvent) => {
-    //       if (event.offsetX < -20) {
-    //         this.selectId = this.noteInfo.id
-    //       } else {
-    //         this.selectId = -1
-    //       }
-    //     })
-    // )
+    .gesture(
+      //水平侧滑事件
+      PanGesture({ distance: 20, direction: PanDirection.Horizontal })
+        .onActionUpdate((event: GestureEvent) => {
+          if (event.offsetX < -20) {
+            this.selectId = this.noteInfo.id
+          } else {
+            this.selectId = -1
+          }
+        })
+    )
   }
 }

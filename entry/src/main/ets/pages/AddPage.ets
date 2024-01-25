@@ -13,7 +13,7 @@ struct PageAdd {
   @State clickAble: boolean = true;
   @State imageArray: string [] = []; // 图片列表
   @State noteInfo: NoteInfo = { // 笔记信息
-    id: 1,
+    id: 0,
     title: "",
     content: "",
     date: "",
@@ -93,6 +93,8 @@ struct PageAdd {
             .height(98)
             .onClick(() => {
               // todo 添加图片
+
+              this.selectPic()
             })
         }
       }
@@ -106,5 +108,34 @@ struct PageAdd {
     .padding({ left: CommonConstants.MARGIN_2, right: CommonConstants.MARGIN_2 })
     .backgroundColor($r('app.color.background'))
     .alignItems(HorizontalAlign.Start)
+
+
+  }
+  selectPic(){
+    Logger.info('wuhao','addtupian')
+    let startParmameter = {
+      bundleName:"com.ohos.photos",
+      abilityName: "com.ohos.photos.MainAbility",
+      parameters: {
+        uri: "singleselect"
+      }
+    };
+    globalThis.context.startAbilityForResult(startParmameter).then((result) => {
+      console.info(`startAbilityForResult Promise.resolve is called, result.resultCode =  ${JSON.stringify(result)}`)
+      let want = result['want'];
+      console.info(`test select single ${JSON.stringify(want)}`);
+      if (want != null && want != undefined) {
+        let param = want['parameters'];
+        console.info(`test select single ${JSON.stringify(param)}`);
+        if (param != null && param != undefined) {
+          let uri = param['select-item-list'];
+          // console.info(`test select single ${uri[0]}`);
+          Logger.info('wuhao','addtupian')
+          this.imageArray = uri
+        }
+      }
+    }, (error) => {
+      console.info(`startAbilityForResult Promise.Reject is called, error.code = ${error.code}`)
+    })
   }
 }

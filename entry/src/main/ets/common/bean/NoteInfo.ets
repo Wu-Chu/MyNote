@@ -1,3 +1,4 @@
+@Observed
 export default class NoteInfo {
   id: number;
   date: string;
